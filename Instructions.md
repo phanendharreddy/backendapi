@@ -1,1 +1,0 @@
-Install Go Programming Language.
