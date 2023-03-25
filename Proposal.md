@@ -15,7 +15,6 @@ Lay out the plan and how to execute it. It should match the achieved goals state
 ## Risks & Mitigation 
 List risks that may prevent you from successfully completing your project and your mitigation for each risk. Include other commitments you have during the program (job, internship, etc).
 
-
 ## About me 
 
 I've recently graduated from computer science and engineering stream. My computational skills will help this project to complete effectively. I've worked with academic projects and prosonnel projects as well and then this is the first opportunity with open source organizations. My extensive background in computer science, combined with my passion for open source projects, gives me a unique perspective that I believe would be valuable to your organization.

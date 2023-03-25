@@ -3,17 +3,16 @@ package controllers
 import (
 	"context"
 	"fmt"
-	"log"
-	"net/http"
-	"strconv"
-	"time"
-
 	"github.com/HousewareHQ/houseware---backend-engineering-octernship-phanendharreddy/database"
 	helper "github.com/HousewareHQ/houseware---backend-engineering-octernship-phanendharreddy/helpers"
 	"github.com/HousewareHQ/houseware---backend-engineering-octernship-phanendharreddy/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
+	"log"
+	"net/http"
+	"strconv"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -45,7 +44,7 @@ func VerifyPassword(userPassword string, providedPassword string) (bool, string)
 
 func Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 24*time.Hour)
 		var user models.User
 		var foundUser models.User
 
@@ -85,7 +84,7 @@ func Login() gin.HandlerFunc {
 
 func Logout() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 24*time.Hour)
 		var user models.User
 
 		if err := c.BindJSON(&user); err != nil {
@@ -110,15 +109,17 @@ func Logout() gin.HandlerFunc {
 			return
 		}
 
+		defer database.Client.Disconnect(ctx)
+
 		helper.UpdateAllTokens("", "", user.User_id)
 		c.JSON(http.StatusOK, gin.H{"message": "user logged out successfully"})
+
 	}
 }
 
 func GetUsers() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
-		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second) //CONVERT INTO 24 HOURS ==86400 SECONDS
+		var ctx, cancel = context.WithTimeout(context.Background(), 24*time.Hour)
 
 		recordPerPage, err := strconv.Atoi(c.Query("recordPerPage"))
 		if err != nil || recordPerPage < 1 {
@@ -162,7 +163,7 @@ func CreateUser() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 24*time.Hour)
 		var user models.User
 
 		if err := c.BindJSON(&user); err != nil {
@@ -228,7 +229,7 @@ func DeleteUser() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 24*time.Hour)
 
 		result, err := userCollection.DeleteOne(ctx, bson.M{"user_id": userId})
 		defer cancel()
