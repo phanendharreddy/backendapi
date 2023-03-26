@@ -159,10 +159,7 @@ func GetUsers() gin.HandlerFunc {
 
 func CreateUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if err := helper.CheckUserType(c, "ADMIN"); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
+
 		var ctx, cancel = context.WithTimeout(context.Background(), 24*time.Hour)
 		var user models.User
 
